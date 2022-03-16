@@ -71,11 +71,6 @@ def computeSphericalWarpMappings(dstShape, f, k1, k2):
     # as output for your code. They should all have the shape
     # (img_height, img_width)
     # TODO-BLOCK-BEGIN
-    print()
-    print("xf:")
-    print(xf)
-    print("yf:")
-    print(yf)
     
     x_hat = np.sin(xf)*np.cos(yf)
     y_hat = np.sin(yf)
