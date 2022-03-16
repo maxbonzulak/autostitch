@@ -81,7 +81,7 @@ def computeHomography(f1, f2, matches, A_out=None):
     #BEGIN TODO 3
     #Fill the homography H with the appropriate elements of the SVD
     #TODO-BLOCK-BEGIN
-    raise Exception("TODO in alignment.py not implemented")
+    H = np.reshape(Vt[len(Vt)-1], (3,3))
     #TODO-BLOCK-END
     #END TODO
 
