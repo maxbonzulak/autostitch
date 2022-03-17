@@ -29,7 +29,17 @@ def imageBoundingBox(img, M):
     """
     #TODO 8
     #TODO-BLOCK-BEGIN
-    raise Exception("TODO in blend.py not implemented")
+    tl = np.array([0,0,1])
+    tr = np.array([img.shape[1]-1,0,1])
+    bl = np.array([0,img.shape[0]-1,1])
+    br = np.array([img.shape[1]-1,img.shape[0]-1,1])
+    corners = np.array([tl,tr,bl,br])
+    corners_transformed = np.matmul(M,corners.T)
+    minX = np.min(corners_transformed[0])
+    maxX = np.max(corners_transformed[0])
+    minY = np.min(corners_transformed[1])
+    maxY = np.max(corners_transformed[1])
+
     #TODO-BLOCK-END
     return int(minX), int(minY), int(maxX), int(maxY)
 
@@ -107,7 +117,11 @@ def getAccSize(ipv):
         # BEGIN TODO 9
         # add some code here to update minX, ..., maxY
         #TODO-BLOCK-BEGIN
-        raise Exception("TODO in blend.py not implemented")
+        minXi, minYi, maxXi, maxYi = imageBoundingBox(img,M)
+        minX = min(minX,minXi)
+        minY = min(minY,minYi)
+        maxX = max(maxX,maxXi)
+        maxY = max(maxY,maxYi)
         #TODO-BLOCK-END
         # END TODO
 
