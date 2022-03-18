@@ -127,21 +127,22 @@ def alignPair(f1, f2, matches, m, nRANSAC, RANSACthresh):
     for i in range(nRANSAC):
 
         if m == eTranslate:
-            cases = random.sample(matches,2)
-            matrix = leastSquaresFit(f1,f2,cases,m,[0,1])
+            match = random.choice(matches)
+            (a_x, a_y) = f1[match.queryIdx].pt
+            (b_x, b_y) = f2[match.trainIdx].pt
+            matrix = [[1, 0, b_x - a_x],
+                      [0, 1, b_y - a_y],
+                      [0, 0, 1]]
         else:
             cases = random.sample(matches,4)
             matrix = computeHomography(f1, f2, cases)
 
 
-        inlierIndices = getInliers(f1, f2, matches, matrix, RANSACthresh)
-        if len(inlierIndices) > len(inliers):
-            inliers = inlierIndices
+        tempInlierIndices = getInliers(f1, f2, matches, matrix, RANSACthresh)
+        if len(tempInlierIndices) > len(inliers):
+            inliers = tempInlierIndices
             M = matrix
-    if len(inlierIndices)>0:
-        M = leastSquaresFit(f1, f2, matches, m, inlierIndices)
-    else:
-        raise RuntimeError("RANSAC found no inliers")
+    M = leastSquaresFit(f1, f2, matches, m, inliers)
     #TODO-BLOCK-END
     #END TODO
     return M
@@ -179,9 +180,9 @@ def getInliers(f1, f2, matches, M, RANSACthresh):
         matchIndex = matches[i]
         feature = f1[matchIndex.queryIdx].pt
         match = f2[matchIndex.trainIdx].pt
-        x = feature[0] * M[0,0] + feature[1] * M[0,1] + M[0,2]
-        y = feature[0] * M[1,0] + feature[1] * M[1,1] + M[1,2]
-        z = feature[0] * M[2,0] + feature[1] * M[2,1] + M[2,2]
+        x = feature[0] * M[0][0] + feature[1] * M[0][1] + M[0][2]
+        y = feature[0] * M[1][0] + feature[1] * M[1][1] + M[1][2]
+        z = feature[0] * M[2][0] + feature[1] * M[2][1] + M[2][2]
         x = x/z
         y = y/z
 
