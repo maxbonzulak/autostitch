@@ -59,7 +59,21 @@ def accumulateBlend(img, acc, M, blendWidth):
     # BEGIN TODO 10
     # Fill in this routine
     #TODO-BLOCK-BEGIN
-    raise Exception("TODO in blend.py not implemented")
+    hfilter = np.ones(img.shape[:2])
+    hfilter[:,:blendWidth+1] = np.linspace(0,1,blendWidth+1)
+    hfilter[:,-blendWidth-1:] = np.linspace(1,0,blendWidth+1)
+    vfilter = np.ones(img.shape[:2])
+    vfilter[:blendWidth+1,:] = np.linspace(0,1,blendWidth+1).reshape(blendWidth+1,1)
+    vfilter[-blendWidth-1:,:] = np.linspace(1,0,blendWidth+1).reshape(blendWidth+1,1)
+    filter = np.minimum(hfilter,vfilter)
+    filter[np.all(img == [0,0,0],axis=2)]=0 #might not need this
+    tfilter = cv2.warpPerspective(filter, M, (acc.shape[1],acc.shape[0]))
+    timg = cv2.warpPerspective(img, M, (acc.shape[1],acc.shape[0]))
+    acc[:,:,3] += tfilter
+    for channel in range(timg.shape[2]):
+        acc[:,:,channel] += timg[:,:,channel]*tfilter
+    # acc += np.tensordot(timg,tfilter,axes=((),(2)))
+
     #TODO-BLOCK-END
     # END TODO
 
@@ -75,7 +89,10 @@ def normalizeBlend(acc):
     # BEGIN TODO 11
     # fill in this routine..
     #TODO-BLOCK-BEGIN
-    raise Exception("TODO in blend.py not implemented")
+    # replacements = np.full(acc.shape,[0,0,0,1])
+    # acc = np.where(acc[:,:,3]==0,replacements,acc)
+    acc[acc[:,:,3]==0] = [0,0,0,1]
+    return np.array((acc/acc[:,:,3,None])[:,:,:3],dtype=np.uint8)
     #TODO-BLOCK-END
     # END TODO
     return img
@@ -213,7 +230,14 @@ def blendImages(ipv, blendWidth, is360=False, A_out=None):
     # Note: warpPerspective does forward mapping which means A is an affine
     # transform that maps accumulator coordinates to final panorama coordinates
     #TODO-BLOCK-BEGIN
-    raise Exception("TODO in blend.py not implemented")
+    if is360:
+        leftmost = ipv[0]
+        rightmost = ipv[len(ipv)-1]
+        minX, minY1 = imageBoundingBox(leftmost.img, leftmost.position)[:2]
+        minY2,maxX = imageBoundingBox(rightmost.img, rightmost.position)[1,2]
+        width = maxX-minX
+        minY_diff = minY2-minY1
+        A[1,0] = minY_diff/width
     #TODO-BLOCK-END
     # END TODO
 
