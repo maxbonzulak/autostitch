@@ -35,6 +35,9 @@ def imageBoundingBox(img, M):
     br = np.array([img.shape[1]-1,img.shape[0]-1,1])
     corners = np.array([tl,tr,bl,br])
     corners_transformed = np.matmul(M,corners.T)
+    for i in range(4):
+        corners_transformed[0][i] = corners_transformed[0][i] / corners_transformed[2][i]
+        corners_transformed[1][i] = corners_transformed[1][i] / corners_transformed[2][i]
     minX = np.min(corners_transformed[0])
     maxX = np.max(corners_transformed[0])
     minY = np.min(corners_transformed[1])
