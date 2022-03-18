@@ -237,9 +237,9 @@ def blendImages(ipv, blendWidth, is360=False, A_out=None):
         leftmost = ipv[0]
         rightmost = ipv[len(ipv)-1]
         minX, minY1 = imageBoundingBox(leftmost.img, leftmost.position)[:2]
-        minY2,maxX = imageBoundingBox(rightmost.img, rightmost.position)[1,2]
+        minY2,maxX = [imageBoundingBox(rightmost.img, rightmost.position)[x] for x in [1,2]]
         width = maxX-minX
-        minY_diff = minY2-minY1
+        minY_diff = minY1-minY2
         A[1,0] = minY_diff/width
     #TODO-BLOCK-END
     # END TODO
