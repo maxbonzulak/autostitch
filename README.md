@@ -6,4 +6,4 @@ Ever wonder how your phone camera captures those long panorama shots? In this pr
 ![Small Panorama Image](CTsmall.jpg "Small Stitched Panorama")
 
 
-[]: # (Project Page: https://www.cs.cornell.edu/courses/cs5670/2022sp/projects/pa3/)
+<!--- Project Page: https://www.cs.cornell.edu/courses/cs5670/2022sp/projects/pa3/ -->
